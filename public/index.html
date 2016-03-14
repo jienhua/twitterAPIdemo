@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app='socialApp'>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1'><!--Optimize mobile viewport-->
+	<title>Node Server transfer infomation</title>
+
+	<link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css'><!--load bootstrap-->
+	<link rel='stylesheet' href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css'>
+
+	<script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js'></script>
+	<script src='js/controllers/twitterControllers.js'></script><!-- load up our controller -->
+	<script src='js/services/server.js'></script>
+	<script src='js/core.js'></script>
+	<style>
+		body{
+			background-color: #e0e0d1;
+		}
+	</style>
+</head>
+<body ng-controller='twitterController' ng-init='imgSwitch=true; oriTweetSwitch=true;'>
+	<div class='container'>
+		<div class='row'>
+		<div class='leftContainer col-sm-6'>
+			<div class='page-header'>
+				<h1>T</h1>
+			</div>
+			<div>
+				<button class='btn btn-info btn-md' ng-click='reloadTweet()'>Reload Tweet</button>
+				<div ng-repeat='x in tweets'>
+					<div class='page-header'>
+						<img ng-hide='true' ng-src="{{x.user.profile_image_url}}"/>
+						<strong>
+						{{x.user.name}} 
+						<br>
+						{{x.text}}<br>
+						</strong>
+						<button ng-hide="x.extended_entities.media.length===undefined && x.quoted_status.extended_entities.media ===undefined" class='btn btn-primary btn-sm' ng-click="imgSwitch=!imgSwitch">Show</button>
+						<br>
+						<div ng-hide='x.extended_entities.media.length>0' ng-repeat="y in x.quoted_status.extended_entities.media ">
+							<img ng-hide='imgSwitch' ng-src="{{y.media_url}}" style="width: 80%;"/>
+						</div>
+						<div ng-hide='x.extended_entities.media===0' ng-repeat='y in x.extended_entities.media'>
+							<img ng-hide='imgSwitch' ng-src="{{y.media_url}}" style="width: 80%;"/>
+						</div>
+						{{correctTimestring(x.created_at) | date: 'medium'}}<br>
+						<button ng-hide='x.retweeted_status.text===undefined' class='btn btn-primary btn-xs' ng-click='oriTweetSwitch=!oriTweetSwitch'>Original Tweet</button>
+						<div ng-hide='oriTweetSwitch'>{{x.retweeted_status.text}}</div>
+						<br>
+					</div>
+				</div>
+				{{tweets[0]}}
+			</div>
+		</div><!--leftContainer-->
+
+		<div class='rightContainer col-sm-6'>
+			<div class='page-header'>
+				<h1>F</h1>
+			</div>
+		</div><!-- rightContainer -->
+	</div><!--row-->
+	</div><!-- container -->
+</body>
+</html>
